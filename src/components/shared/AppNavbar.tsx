@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Menu, X } from "lucide-react";
 import { useT } from "@/hooks/useT";
 import { useLangStore } from "@/store/langStore";
+import { WalletButton } from "@/components/features/WalletButton";
 
 export function AppNavbar() {
   const pathname = usePathname();
@@ -60,10 +61,7 @@ export function AppNavbar() {
         </nav>
 
         <div className="hidden md:flex items-center gap-3">
-          <div className="flex items-center gap-1.5">
-            <div className="h-2 w-2 rounded-full bg-success" />
-            <span className="text-xs text-muted-foreground">{t("nav.connected")}</span>
-          </div>
+          <WalletButton />
           <button
             onClick={toggleLang}
             className="flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-medium text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors border border-border/50"

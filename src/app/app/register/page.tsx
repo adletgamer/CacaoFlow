@@ -584,9 +584,9 @@ export default function RegisterPlotPage() {
                   <Upload className="h-4 w-4 text-primary" />
                   {t("register.evidence.title")}
                 </CardTitle>
-                <p className="text-xs text-muted-foreground">
-                  {t("register.evidence.subtitle")} <Badge variant="default" className="text-[10px] ml-1">{t("register.evidence.ready")}</Badge>
-                </p>
+                <div className="text-xs text-muted-foreground flex items-center flex-wrap gap-1">
+                  {t("register.evidence.subtitle")} <Badge variant="default" className="text-[10px]">{t("register.evidence.ready")}</Badge>
+                </div>
               </CardHeader>
               <CardContent className="pt-4 space-y-4">
                 {/* Add new doc */}

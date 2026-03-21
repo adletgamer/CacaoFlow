@@ -1,0 +1,183 @@
+[
+  {
+    "type": "constructor",
+    "inputs": [
+      { "name": "_usdc", "type": "address", "internalType": "address" },
+      { "name": "_feeRecipient", "type": "address", "internalType": "address" }
+    ],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "publishOpportunity",
+    "inputs": [
+      { "name": "vpcId", "type": "string", "internalType": "string" },
+      { "name": "opportunityId", "type": "string", "internalType": "string" },
+      { "name": "targetRaise", "type": "uint256", "internalType": "uint256" },
+      { "name": "minTicket", "type": "uint256", "internalType": "uint256" },
+      { "name": "expectedReturnBps", "type": "uint256", "internalType": "uint256" },
+      { "name": "tenorDays", "type": "uint256", "internalType": "uint256" },
+      { "name": "fundingDeadlineDays", "type": "uint256", "internalType": "uint256" }
+    ],
+    "outputs": [{ "name": "id", "type": "uint256", "internalType": "uint256" }],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "invest",
+    "inputs": [
+      { "name": "id", "type": "uint256", "internalType": "uint256" },
+      { "name": "amount", "type": "uint256", "internalType": "uint256" }
+    ],
+    "outputs": [{ "name": "positionId", "type": "uint256", "internalType": "uint256" }],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "settle",
+    "inputs": [{ "name": "id", "type": "uint256", "internalType": "uint256" }],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "claimRepayment",
+    "inputs": [{ "name": "positionId", "type": "uint256", "internalType": "uint256" }],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "claimRefund",
+    "inputs": [{ "name": "positionId", "type": "uint256", "internalType": "uint256" }],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "cancelOpportunity",
+    "inputs": [{ "name": "id", "type": "uint256", "internalType": "uint256" }],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "getOpportunity",
+    "inputs": [{ "name": "id", "type": "uint256", "internalType": "uint256" }],
+    "outputs": [
+      {
+        "name": "",
+        "type": "tuple",
+        "internalType": "struct CacaoFlowOpportunities.Opportunity",
+        "components": [
+          { "name": "vpcId", "type": "string", "internalType": "string" },
+          { "name": "opportunityId", "type": "string", "internalType": "string" },
+          { "name": "originator", "type": "address", "internalType": "address" },
+          { "name": "targetRaise", "type": "uint256", "internalType": "uint256" },
+          { "name": "minTicket", "type": "uint256", "internalType": "uint256" },
+          { "name": "expectedReturnBps", "type": "uint256", "internalType": "uint256" },
+          { "name": "tenorDays", "type": "uint256", "internalType": "uint256" },
+          { "name": "fundingDeadline", "type": "uint256", "internalType": "uint256" },
+          { "name": "raisedAmount", "type": "uint256", "internalType": "uint256" },
+          { "name": "settleAmount", "type": "uint256", "internalType": "uint256" },
+          { "name": "status", "type": "uint8", "internalType": "enum CacaoFlowOpportunities.OpportunityStatus" }
+        ]
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "getPosition",
+    "inputs": [{ "name": "positionId", "type": "uint256", "internalType": "uint256" }],
+    "outputs": [
+      {
+        "name": "",
+        "type": "tuple",
+        "internalType": "struct CacaoFlowOpportunities.Position",
+        "components": [
+          { "name": "opportunityId", "type": "uint256", "internalType": "uint256" },
+          { "name": "investor", "type": "address", "internalType": "address" },
+          { "name": "amount", "type": "uint256", "internalType": "uint256" },
+          { "name": "claimed", "type": "bool", "internalType": "bool" }
+        ]
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "getInvestorPositions",
+    "inputs": [{ "name": "investor", "type": "address", "internalType": "address" }],
+    "outputs": [{ "name": "", "type": "uint256[]", "internalType": "uint256[]" }],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "opportunityCount",
+    "inputs": [],
+    "outputs": [{ "name": "", "type": "uint256", "internalType": "uint256" }],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "usdc",
+    "inputs": [],
+    "outputs": [{ "name": "", "type": "address", "internalType": "address" }],
+    "stateMutability": "view"
+  },
+  {
+    "type": "event",
+    "name": "OpportunityPublished",
+    "inputs": [
+      { "name": "id", "type": "uint256", "indexed": true, "internalType": "uint256" },
+      { "name": "vpcId", "type": "string", "indexed": false, "internalType": "string" },
+      { "name": "opportunityId", "type": "string", "indexed": false, "internalType": "string" },
+      { "name": "originator", "type": "address", "indexed": true, "internalType": "address" },
+      { "name": "targetRaise", "type": "uint256", "indexed": false, "internalType": "uint256" },
+      { "name": "expectedReturnBps", "type": "uint256", "indexed": false, "internalType": "uint256" },
+      { "name": "tenorDays", "type": "uint256", "indexed": false, "internalType": "uint256" },
+      { "name": "fundingDeadline", "type": "uint256", "indexed": false, "internalType": "uint256" }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "InvestmentMade",
+    "inputs": [
+      { "name": "opportunityId", "type": "uint256", "indexed": true, "internalType": "uint256" },
+      { "name": "positionId", "type": "uint256", "indexed": true, "internalType": "uint256" },
+      { "name": "investor", "type": "address", "indexed": true, "internalType": "address" },
+      { "name": "amount", "type": "uint256", "indexed": false, "internalType": "uint256" }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "OpportunityFunded",
+    "inputs": [
+      { "name": "id", "type": "uint256", "indexed": true, "internalType": "uint256" }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "OpportunitySettled",
+    "inputs": [
+      { "name": "id", "type": "uint256", "indexed": true, "internalType": "uint256" },
+      { "name": "settleAmount", "type": "uint256", "indexed": false, "internalType": "uint256" }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "RepaymentClaimed",
+    "inputs": [
+      { "name": "positionId", "type": "uint256", "indexed": true, "internalType": "uint256" },
+      { "name": "investor", "type": "address", "indexed": true, "internalType": "address" },
+      { "name": "principal", "type": "uint256", "indexed": false, "internalType": "uint256" },
+      { "name": "returnAmount", "type": "uint256", "indexed": false, "internalType": "uint256" }
+    ],
+    "anonymous": false
+  }
+]

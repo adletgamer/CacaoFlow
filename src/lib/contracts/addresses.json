@@ -1,0 +1,8 @@
+{
+  "chainId": 43113,
+  "network": "avalanche-fuji",
+  "MockUSDC": "0x0000000000000000000000000000000000000000",
+  "CacaoFlowOpportunities": "0x0000000000000000000000000000000000000000",
+  "deployedAt": "pending",
+  "deployer": "pending"
+}

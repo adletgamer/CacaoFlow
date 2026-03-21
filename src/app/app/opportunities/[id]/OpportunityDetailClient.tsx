@@ -14,10 +14,14 @@ import { motion } from "framer-motion";
 import { toast } from "sonner";
 import { useState } from "react";
 import { useT } from "@/hooks/useT";
+import { useAccount } from "wagmi";
+import { useInvest } from "@/hooks/useInvest";
+import { WalletButton } from "@/components/features/WalletButton";
+import { isContractsDeployed } from "@/lib/contracts";
 import {
   Shield, MapPin, Sprout, FileText, Users, DollarSign,
   TrendingUp, Link2, ArrowLeft, CheckCircle2, AlertCircle,
-  Leaf, BarChart3, Clock, ChevronRight,
+  Leaf, BarChart3, Clock, ChevronRight, Loader2, ExternalLink,
 } from "lucide-react";
 
 function bpsToPercent(bps: number) { return (bps / 100).toFixed(2); }
@@ -75,16 +79,27 @@ function ScoreBar({ label, value, max }: { label: string; value: number; max: nu
   );
 }
 
+const OPP_ONCHAIN_ID: Record<string, bigint> = {
+  "OPP-2026-001": 0n,
+  "OPP-2026-002": 1n,
+  "OPP-2026-003": 2n,
+  "OPP-2026-004": 3n,
+};
+
 function InvestPanel({ opp }: { opp: MockInvestmentOpportunity }) {
   const { t } = useT();
+  const { isConnected } = useAccount();
   const [amount, setAmount] = useState("");
-  const [wallet, setWallet] = useState("");
-  const [submitted, setSubmitted] = useState(false);
-  const [loading, setLoading] = useState(false);
   const funded = fundedPct(opp);
   const isOpen = opp.status === "published";
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const onchainId = OPP_ONCHAIN_ID[opp.id] ?? 0n;
+  const { invest, reset, step, errorMsg, investTxHash, isLoading, isSuccess } = useInvest({
+    onchainOpportunityId: onchainId,
+    amountUsd: parseFloat(amount) || 0,
+  });
+
+  function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     const n = parseFloat(amount);
     if (!n || n <= 0) { toast.error(t("opportunityDetail.invest.validation.amount")); return; }
@@ -92,15 +107,14 @@ function InvestPanel({ opp }: { opp: MockInvestmentOpportunity }) {
       toast.error(`${t("opportunityDetail.invest.validation.minTicket")} $${opp.min_ticket_usd}`);
       return;
     }
-    if (!wallet.trim()) { toast.error(t("opportunityDetail.invest.validation.wallet")); return; }
-    setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
-      setSubmitted(true);
-      toast.success(t("opportunityDetail.invest.successTitle"), {
-        description: t("opportunityDetail.invest.successDesc"),
-      });
-    }, 1200);
+    invest();
+  }
+
+  const STEP_LABEL: Record<string, string> = {
+    approving: t("opportunityDetail.invest.stepApproving"),
+    approve_pending: t("opportunityDetail.invest.stepApprovePending"),
+    investing: t("opportunityDetail.invest.stepInvesting"),
+    invest_pending: t("opportunityDetail.invest.stepInvestPending"),
   };
 
   return (
@@ -112,6 +126,7 @@ function InvestPanel({ opp }: { opp: MockInvestmentOpportunity }) {
         </CardTitle>
       </CardHeader>
       <CardContent className="pt-4 space-y-4">
+        {/* Metrics */}
         <div className="grid grid-cols-2 gap-2">
           <div className="rounded-md bg-secondary p-2 text-center">
             <p className="text-[10px] text-muted-foreground uppercase tracking-wide">{t("opportunities.card.return")}</p>
@@ -124,6 +139,8 @@ function InvestPanel({ opp }: { opp: MockInvestmentOpportunity }) {
             <p className="text-[10px] text-muted-foreground">{opp.currency}</p>
           </div>
         </div>
+
+        {/* Funding progress */}
         <div className="space-y-1.5 rounded-md bg-secondary p-3">
           <div className="flex justify-between text-xs">
             <span className="text-muted-foreground">{t("opportunities.card.funded")}</span>
@@ -135,47 +152,97 @@ function InvestPanel({ opp }: { opp: MockInvestmentOpportunity }) {
             <span>${opp.target_raise_usd.toLocaleString()} target</span>
           </div>
         </div>
+
+        {/* Contracts not deployed yet */}
+        {!isContractsDeployed && (
+          <div className="flex items-start gap-2 p-3 rounded-md bg-amber-50 border border-amber-200 text-xs text-amber-700">
+            <AlertCircle className="h-3.5 w-3.5 shrink-0 mt-0.5" />
+            <span>Contracts pending deploy to Fuji. On-chain investment will be active after deployment.</span>
+          </div>
+        )}
+
         {!isOpen ? (
           <div className="flex items-center gap-2 text-sm text-muted-foreground p-3 rounded-md bg-secondary">
             <AlertCircle className="h-4 w-4 shrink-0" />
             {t("opportunityDetail.invest.alreadyFunded")}
           </div>
-        ) : submitted ? (
+        ) : isSuccess ? (
           <div className="flex flex-col items-center gap-3 py-4 text-center">
             <CheckCircle2 className="h-10 w-10 text-emerald-500" />
             <p className="font-semibold text-sm">{t("opportunityDetail.invest.successTitle")}</p>
             <p className="text-xs text-muted-foreground">{t("opportunityDetail.invest.successDesc")}</p>
             <Badge variant="success" className="mt-1">${parseFloat(amount).toLocaleString()} · {opp.currency}</Badge>
+            {investTxHash && (
+              <a
+                href={`https://testnet.snowtrace.io/tx/${investTxHash}`}
+                target="_blank" rel="noopener noreferrer"
+                className="flex items-center gap-1 text-xs text-primary hover:underline"
+              >
+                <ExternalLink className="h-3 w-3" />
+                View on Snowtrace
+              </a>
+            )}
+            <Button variant="outline" size="sm" onClick={reset} className="mt-1">
+              {t("opportunityDetail.invest.investAgain")}
+            </Button>
           </div>
         ) : (
-          <form onSubmit={handleSubmit} className="space-y-3">
-            <p className="text-xs text-muted-foreground">{t("opportunityDetail.invest.subtitle")}</p>
-            <div className="space-y-1.5">
-              <Label className="text-xs">{t("opportunityDetail.invest.amountLabel")}</Label>
-              <div className="relative">
-                <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
-                <Input
-                  type="number" min={opp.min_ticket_usd} step={50}
-                  placeholder={t("opportunityDetail.invest.amountPlaceholder")}
-                  value={amount} onChange={(e) => setAmount(e.target.value)}
-                  className="pl-8"
-                />
+          <>
+            {/* Wallet connection gate */}
+            {!isConnected && (
+              <div className="p-3 rounded-md border border-border bg-secondary/50 flex flex-col items-center gap-2">
+                <p className="text-xs text-muted-foreground text-center">{t("opportunityDetail.invest.connectPrompt")}</p>
+                <WalletButton />
               </div>
-              <p className="text-[10px] text-muted-foreground">
-                {t("opportunityDetail.invest.minNote")} <strong>${opp.min_ticket_usd} {opp.currency}</strong>
-              </p>
-            </div>
-            <div className="space-y-1.5">
-              <Label className="text-xs">{t("opportunityDetail.invest.walletLabel")}</Label>
-              <Input
-                placeholder={t("opportunityDetail.invest.walletPlaceholder")}
-                value={wallet} onChange={(e) => setWallet(e.target.value)}
-              />
-            </div>
-            <Button type="submit" variant="accent" className="w-full" disabled={loading}>
-              {loading ? t("opportunityDetail.invest.submitting") : t("opportunityDetail.invest.submitBtn")}
-            </Button>
-          </form>
+            )}
+
+            {/* In-progress indicator */}
+            {isLoading && (
+              <div className="flex items-center gap-2 p-3 rounded-md bg-primary/5 border border-primary/20 text-xs text-primary">
+                <Loader2 className="h-3.5 w-3.5 animate-spin shrink-0" />
+                <span>{STEP_LABEL[step] ?? t("opportunityDetail.invest.submitting")}</span>
+              </div>
+            )}
+
+            {/* Error */}
+            {errorMsg && (
+              <div className="flex items-start gap-2 p-3 rounded-md bg-destructive/10 border border-destructive/20 text-xs text-destructive">
+                <AlertCircle className="h-3.5 w-3.5 shrink-0 mt-0.5" />
+                <span>{errorMsg}</span>
+              </div>
+            )}
+
+            {/* Form */}
+            <form onSubmit={handleSubmit} className="space-y-3">
+              <p className="text-xs text-muted-foreground">{t("opportunityDetail.invest.subtitle")}</p>
+              <div className="space-y-1.5">
+                <Label className="text-xs">{t("opportunityDetail.invest.amountLabel")}</Label>
+                <div className="relative">
+                  <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
+                  <Input
+                    type="number" min={opp.min_ticket_usd} step={50}
+                    placeholder={t("opportunityDetail.invest.amountPlaceholder")}
+                    value={amount} onChange={(e) => setAmount(e.target.value)}
+                    className="pl-8"
+                    disabled={isLoading}
+                  />
+                </div>
+                <p className="text-[10px] text-muted-foreground">
+                  {t("opportunityDetail.invest.minNote")} <strong>${opp.min_ticket_usd} {opp.currency}</strong>
+                </p>
+              </div>
+              <Button
+                type="submit" variant="accent" className="w-full"
+                disabled={isLoading || !isConnected}
+              >
+                {isLoading ? (
+                  <><Loader2 className="h-3.5 w-3.5 animate-spin mr-1.5" />{STEP_LABEL[step]}</>
+                ) : (
+                  t("opportunityDetail.invest.submitBtn")
+                )}
+              </Button>
+            </form>
+          </>
         )}
       </CardContent>
     </Card>

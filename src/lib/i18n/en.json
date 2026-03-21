@@ -14,17 +14,36 @@
     }
   },
 
+  "wallet": {
+    "connect": "Connect Wallet",
+    "connecting": "Connecting...",
+    "disconnect": "Disconnect",
+    "copyAddress": "Copy address",
+    "copied": "Copied!",
+    "wrongNetwork": "Switch to Fuji",
+    "selectWallet": "Select Wallet",
+    "notInstalled": "Not installed",
+    "newToWallets": "New to wallets?",
+    "learnMore": "Learn more",
+    "unsupportedNetwork": "Unsupported Network",
+    "switchToSupported": "Please switch to a supported network",
+    "network": "Network"
+  },
+
   "landing": {
-    "badge": "RWA Protocol · Pre-Harvest Financing",
+    "badge": "Underwritten Pre-Harvest Opportunities",
     "hero": {
-      "title1": "From field to chain.",
-      "title2": "Structured underwriting",
-      "title3": "for cacao pre-harvest.",
-      "subtitle": "We turn harvest projections into auditable Verified Production Claims (VPCs). Automated scoring, on-chain issuance, and structured access to capital — built for agricultural originators."
+      "title": "Invest in pre-harvest cacao with structured underwriting.",
+      "subtitle": "Cacao Flow turns verified farm data into investable opportunities with scorecards, auditable evidence, and onchain funding rails.",
+      "bullets": {
+        "bullet1": "Underwritten opportunities, not raw listings",
+        "bullet2": "Risk bands, projected yield, and funding terms",
+        "bullet3": "Onchain traceability from issuance to funding"
+      }
     },
     "cta": {
-      "originator": "Register a Lot",
-      "investor": "Review Opportunities"
+      "primary": "Browse Opportunities",
+      "secondary": "Register as Originator"
     },
     "flow": {
       "title": "How it works",
@@ -486,9 +505,15 @@
       "walletPlaceholder": "GXXXX... (Stellar)",
       "submitBtn": "Confirm Investment",
       "submitting": "Processing...",
-      "successTitle": "Investment submitted",
-      "successDesc": "Your position has been recorded. The tx hash will appear once confirmed onchain.",
+      "successTitle": "Investment confirmed!",
+      "successDesc": "Your position has been recorded onchain. Check Snowtrace for confirmation.",
       "alreadyFunded": "This opportunity is fully funded.",
+      "connectPrompt": "Connect your wallet to invest in this opportunity.",
+      "investAgain": "Invest again",
+      "stepApproving": "Approving mUSDC spend...",
+      "stepApprovePending": "Waiting for approval confirmation...",
+      "stepInvesting": "Sending investment transaction...",
+      "stepInvestPending": "Waiting for investment confirmation...",
       "validation": {
         "amount": "Enter a valid amount",
         "minTicket": "Amount must be at least the minimum ticket",

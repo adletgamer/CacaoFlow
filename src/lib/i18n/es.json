@@ -1,4 +1,20 @@
 {
+  "wallet": {
+    "connect": "Conectar Wallet",
+    "connecting": "Conectando...",
+    "disconnect": "Desconectar",
+    "copyAddress": "Copiar dirección",
+    "copied": "¡Copiado!",
+    "wrongNetwork": "Cambiar a Fuji",
+    "selectWallet": "Seleccionar Wallet",
+    "notInstalled": "No instalado",
+    "newToWallets": "¿Nuevo en wallets?",
+    "learnMore": "Aprender más",
+    "unsupportedNetwork": "Red No Soportada",
+    "switchToSupported": "Por favor cambia a una red soportada",
+    "network": "Red"
+  },
+
   "nav": {
     "brand": "Aleph Cacao",
     "dashboard": "Dashboard",
@@ -15,16 +31,19 @@
   },
 
   "landing": {
-    "badge": "Protocolo RWA · Financiamiento Pre-Cosecha",
+    "badge": "Oportunidades Pre-Cosecha con Underwriting Estructurado",
     "hero": {
-      "title1": "De la tierra a la cadena.",
-      "title2": "Suscripción estructurada",
-      "title3": "para pre-cosecha de cacao.",
-      "subtitle": "Convertimos proyecciones de cosecha en Reclamos de Producción Verificados (VPCs) auditables. Scoring automatizado, emisión on-chain y acceso estructurado a capital — construido para originadores agrícolas."
+      "title": "Invierte en cacao pre-cosecha con underwriting estructurado.",
+      "subtitle": "Cacao Flow convierte datos verificados de fincas en oportunidades de inversión con scorecards, evidencia auditable y rieles de financiamiento onchain.",
+      "bullets": {
+        "bullet1": "Oportunidades con underwriting, no listados crudos",
+        "bullet2": "Bandas de riesgo, rendimiento proyectado y términos de financiamiento",
+        "bullet3": "Trazabilidad onchain desde emisión hasta financiamiento"
+      }
     },
     "cta": {
-      "originator": "Registrar un Lote",
-      "investor": "Ver Oportunidades"
+      "primary": "Ver Oportunidades",
+      "secondary": "Registrarse como Originador"
     },
     "flow": {
       "title": "Cómo funciona",
@@ -486,9 +505,15 @@
       "walletPlaceholder": "GXXXX... (Stellar)",
       "submitBtn": "Confirmar Inversión",
       "submitting": "Procesando...",
-      "successTitle": "Inversión enviada",
-      "successDesc": "Tu posición ha sido registrada. El tx hash aparecerá al confirmarse onchain.",
+      "successTitle": "¡Inversión confirmada!",
+      "successDesc": "Tu posición ha sido registrada onchain. Verifica en Snowtrace.",
       "alreadyFunded": "Esta oportunidad está completamente financiada.",
+      "connectPrompt": "Conecta tu wallet para invertir en esta oportunidad.",
+      "investAgain": "Invertir de nuevo",
+      "stepApproving": "Aprobando gasto de mUSDC...",
+      "stepApprovePending": "Esperando confirmación de aprobación...",
+      "stepInvesting": "Enviando transacción de inversión...",
+      "stepInvestPending": "Esperando confirmación de inversión...",
       "validation": {
         "amount": "Ingresa un monto válido",
         "minTicket": "El monto debe ser al menos el ticket mínimo",

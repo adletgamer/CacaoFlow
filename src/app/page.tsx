@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ScoreBadge } from "@/components/features/ScoreBadge";
+import { LiveOpportunityPanel } from "@/components/features/LiveOpportunityPanel";
+import { WalletButton } from "@/components/features/WalletButton";
 import { motion } from "framer-motion";
 import { Leaf, ArrowRight, Shield, BarChart3, Coins, CheckCircle2, Globe, Users, Building2 } from "lucide-react";
 import { useT } from "@/hooks/useT";
@@ -50,9 +52,7 @@ export default function LandingPage() {
             <Link href="/app">
               <Button variant="ghost" size="sm">{t("nav.dashboard")}</Button>
             </Link>
-            <Link href="/app/register">
-              <Button variant="accent" size="sm">{t("nav.registerPlot")}</Button>
-            </Link>
+            <WalletButton />
             <button
               onClick={() => setLang(lang === "en" ? "es" : "en")}
               className="flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-medium text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors border border-border/50"
@@ -67,83 +67,73 @@ export default function LandingPage() {
       {/* Hero */}
       <section className="border-b border-border">
         <div className="container py-24 md:py-32">
-          <motion.div
-            variants={stagger}
-            initial="initial"
-            animate="animate"
-            className="max-w-3xl mx-auto text-center"
-          >
-            <motion.div variants={fadeUp}>
-              <Badge variant="outline" className="mb-6 text-xs font-medium">
-                {t("landing.badge")}
-              </Badge>
-            </motion.div>
-            <motion.h1
-              variants={fadeUp}
-              className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-foreground leading-[1.1]"
+          <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+            {/* Left: Content */}
+            <motion.div
+              variants={stagger}
+              initial="initial"
+              animate="animate"
             >
-              {t("landing.hero.title1")}{" "}
-              <span className="text-primary">{t("landing.hero.title2")}</span>{" "}
-              {t("landing.hero.title3")}
-            </motion.h1>
-            <motion.p
-              variants={fadeUp}
-              className="mt-6 text-lg text-muted-foreground max-w-2xl mx-auto"
-            >
-              {t("landing.hero.subtitle")}
-            </motion.p>
-            <motion.div variants={fadeUp} className="mt-8 flex items-center justify-center gap-4 flex-wrap">
-              <Link href="/app/register">
-                <Button variant="hero" size="lg">
-                  {t("landing.cta.originator")}
-                  <ArrowRight className="h-4 w-4 ml-1" />
-                </Button>
-              </Link>
-              <Link href="/app/financing">
-                <Button variant="hero-outline" size="lg">
-                  {t("landing.cta.investor")}
-                </Button>
-              </Link>
-            </motion.div>
-          </motion.div>
+              <motion.div variants={fadeUp}>
+                <Badge variant="outline" className="mb-6 text-xs font-medium">
+                  {t("landing.badge")}
+                </Badge>
+              </motion.div>
+              <motion.h1
+                variants={fadeUp}
+                className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-foreground leading-[1.1]"
+              >
+                {t("landing.hero.title")}
+              </motion.h1>
+              <motion.p
+                variants={fadeUp}
+                className="mt-6 text-lg text-muted-foreground leading-relaxed"
+              >
+                {t("landing.hero.subtitle")}
+              </motion.p>
 
-          {/* VPC Preview Card */}
-          <motion.div
-            initial={{ opacity: 0, y: 40 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.4, ease: [0.25, 0.1, 0.25, 1] }}
-            className="mt-16 max-w-md mx-auto"
-          >
-            <Card className="shadow-elevated border border-border/50">
-              <div className="h-1 bg-primary rounded-t-lg" />
-              <CardContent className="p-6">
-                <div className="flex items-start justify-between mb-4">
-                  <div>
-                    <div className="flex items-center gap-2 mb-1">
-                      <Shield className="h-4 w-4 text-primary" />
-                      <span className="font-semibold text-sm">VPC-2026-001</span>
-                    </div>
-                    <p className="text-xs text-muted-foreground">Cooperativa San Martín · Huila, Colombia</p>
-                  </div>
-                  <ScoreBadge score="A" numeric={94} size="md" />
-                </div>
-                <div className="grid grid-cols-3 gap-4 pt-4 border-t border-border/50">
-                  <div>
-                    <p className="text-[10px] text-muted-foreground uppercase tracking-wider">Yield</p>
-                    <p className="text-sm font-semibold tabular-nums">1.8 Ton</p>
-                  </div>
-                  <div>
-                    <p className="text-[10px] text-muted-foreground uppercase tracking-wider">Eligible</p>
-                    <p className="text-sm font-semibold tabular-nums">$3,600</p>
-                  </div>
-                  <div>
-                    <p className="text-[10px] text-muted-foreground uppercase tracking-wider">Risk</p>
-                    <Badge variant="success" className="text-[10px] mt-0.5">Low</Badge>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </motion.div>
+              {/* Bullets */}
+              <motion.ul variants={fadeUp} className="mt-6 space-y-3">
+                <li className="flex items-start gap-3 text-sm text-foreground">
+                  <CheckCircle2 className="h-5 w-5 text-primary shrink-0 mt-0.5" />
+                  <span>{t("landing.hero.bullets.bullet1")}</span>
+                </li>
+                <li className="flex items-start gap-3 text-sm text-foreground">
+                  <CheckCircle2 className="h-5 w-5 text-primary shrink-0 mt-0.5" />
+                  <span>{t("landing.hero.bullets.bullet2")}</span>
+                </li>
+                <li className="flex items-start gap-3 text-sm text-foreground">
+                  <CheckCircle2 className="h-5 w-5 text-primary shrink-0 mt-0.5" />
+                  <span>{t("landing.hero.bullets.bullet3")}</span>
+                </li>
+              </motion.ul>
+
+              {/* CTAs - Investor first */}
+              <motion.div variants={fadeUp} className="mt-8 flex items-center gap-4 flex-wrap">
+                <Link href="/app/opportunities">
+                  <Button variant="hero" size="lg" className="font-semibold">
+                    {t("landing.cta.primary")}
+                    <ArrowRight className="h-4 w-4 ml-2" />
+                  </Button>
+                </Link>
+                <Link href="/app/register">
+                  <Button variant="hero-outline" size="lg" className="font-semibold">
+                    {t("landing.cta.secondary")}
+                  </Button>
+                </Link>
+              </motion.div>
+            </motion.div>
+
+            {/* Right: Live Opportunity Panel */}
+            <motion.div
+              initial={{ opacity: 0, x: 40 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8, delay: 0.3, ease: [0.25, 0.1, 0.25, 1] }}
+              className="lg:pl-8"
+            >
+              <LiveOpportunityPanel />
+            </motion.div>
+          </div>
         </div>
       </section>
 
