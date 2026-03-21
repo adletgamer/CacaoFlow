@@ -2,8 +2,8 @@ import { createConfig, http } from "wagmi";
 import { avalancheFuji, avalanche, mainnet, sepolia, polygon, arbitrum, arbitrumSepolia } from "wagmi/chains";
 import { injected } from "wagmi/connectors";
 
-// Chains soportadas - testnets primero para hackathon
-export const supportedChains = [arbitrumSepolia, avalancheFuji, arbitrum, avalanche, mainnet, sepolia, polygon] as const;
+// Chains soportadas - Avalanche Fuji es primaria para el hackathon MVP
+export const supportedChains = [avalancheFuji, avalanche, arbitrumSepolia, arbitrum, mainnet, sepolia, polygon] as const;
 
 export type SupportedChain = (typeof supportedChains)[number];
 
@@ -55,8 +55,8 @@ export function isTestnet(chainId: number): boolean {
   return chainId === arbitrumSepolia.id || chainId === avalancheFuji.id || chainId === sepolia.id;
 }
 
-/** Chain where CacaoFlow contracts are deployed (primary testnet for hackathon) */
-export const PRIMARY_CHAIN = arbitrumSepolia;
-export const PRIMARY_CHAIN_MAINNET = arbitrum;
+/** Chain where CacaoFlow contracts are deployed — Avalanche Fuji for hackathon MVP */
+export const PRIMARY_CHAIN = avalancheFuji;
+export const PRIMARY_CHAIN_MAINNET = avalanche;
 
 export { arbitrumSepolia, arbitrum, avalancheFuji, avalanche, mainnet, sepolia, polygon };

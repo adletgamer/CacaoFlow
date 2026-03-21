@@ -30,8 +30,8 @@ export function isDeployedOnChain(chainId: number): boolean {
   return addr.CacaoFlowOpportunities !== ZERO;
 }
 
-/** Primary testnet chainId for hackathon (Arbitrum Sepolia) */
-export const PRIMARY_CHAIN_ID = 421614;
+/** Primary testnet chainId for hackathon MVP — Avalanche Fuji only */
+export const PRIMARY_CHAIN_ID = 43113;
 
 /** Convenience: addresses for primary chain */
 export const CONTRACT_ADDRESSES = getContractAddresses(PRIMARY_CHAIN_ID);

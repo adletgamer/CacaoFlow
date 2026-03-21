@@ -28,51 +28,51 @@ const stagger = {
 
 const CHAIN_ROADMAP = [
   {
-    phase: "Phase 1",
+    phase: "MVP · Hackathon",
     status: "live" as const,
-    chain: "Arbitrum Sepolia",
-    tag: "Testnet · Active",
+    chain: "Avalanche Fuji",
+    tag: "Testnet · Only chain in scope",
     features: [
       "MockUSDC funding rails",
-      "CacaoFlowOpportunities contract",
       "Full lifecycle: Draft → Repaid",
+      "Real-time funding progress",
       "Investor position tracking",
     ],
   },
   {
-    phase: "Phase 2",
+    phase: "Post-MVP",
     status: "next" as const,
-    chain: "Arbitrum One",
-    tag: "Mainnet · Next sprint",
-    features: [
-      "USDC.e (native Circle)",
-      "Production contract deploy",
-      "Arbiscan verification",
-      "Real capital funding",
-    ],
-  },
-  {
-    phase: "Phase 3",
-    status: "planned" as const,
     chain: "Avalanche C-Chain",
-    tag: "Dual-chain · Roadmap",
+    tag: "Mainnet · After hackathon",
     features: [
-      "USDC (Circle native)",
-      "Chain-agnostic investor UX",
-      "Parallel liquidity pools",
-      "Same contract bytecode",
+      "Native USDC (Circle)",
+      "Production contract deploy",
+      "Snowtrace verification",
+      "Real capital, real cacao",
     ],
   },
   {
-    phase: "Phase 4",
-    status: "future" as const,
-    chain: "Cross-Chain (CCIP)",
-    tag: "L2 → L2 · Future",
+    phase: "Expansion",
+    status: "planned" as const,
+    chain: "USDC CCTP Bridge",
+    tag: "Cross-chain · Roadmap",
     features: [
-      "Chainlink CCIP bridge",
+      "Circle CCTP protocol",
+      "Invest from Arbitrum / ETH",
+      "No wrapped tokens",
+      "Unified USDC liquidity",
+    ],
+  },
+  {
+    phase: "Future",
+    status: "future" as const,
+    chain: "Chain Abstraction",
+    tag: "ZeroDev · Smart Accounts",
+    features: [
+      "Account abstraction (AA)",
       "Invest from any EVM chain",
-      "Unified VPC liquidity",
-      "Originator trust NFT",
+      "Gas sponsorship",
+      "Smart account sessions",
     ],
   },
 ];
@@ -123,14 +123,14 @@ export default function LandingPage() {
       <div className="border-b border-border bg-primary/[0.03]">
         <div className="container h-9 flex items-center gap-6 overflow-x-auto text-xs text-muted-foreground">
           <span className="flex items-center gap-1.5 shrink-0">
-            <span className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse" />
-            <span className="font-medium text-primary">Live</span>
-            · Arbitrum Sepolia
+            <span className="h-1.5 w-1.5 rounded-full bg-accent animate-pulse" />
+            <span className="font-medium text-accent">Live</span>
+            · Avalanche Fuji Testnet
           </span>
           <span className="text-border">|</span>
-          <span className="shrink-0">EVM-compatible contracts</span>
+          <span className="shrink-0">MockUSDC · Faucet available</span>
           <span className="text-border">|</span>
-          <span className="shrink-0">USDC funding rails</span>
+          <span className="shrink-0">On-chain lifecycle</span>
           <span className="text-border">|</span>
           <span className="shrink-0">Open source · MIT</span>
           <span className="text-border hidden sm:block">|</span>
@@ -148,9 +148,9 @@ export default function LandingPage() {
                 <Badge variant="outline" className="text-xs font-medium tracking-wide">
                   {t("landing.badge")}
                 </Badge>
-                <Badge className="text-xs font-medium bg-primary/10 text-primary border-primary/20 hover:bg-primary/10 gap-1.5">
-                  <span className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse" />
-                  Arbitrum Sepolia
+                <Badge className="text-xs font-medium bg-accent/10 text-accent border-accent/20 hover:bg-accent/10 gap-1.5">
+                  <span className="h-1.5 w-1.5 rounded-full bg-accent animate-pulse" />
+                  Avalanche Fuji
                 </Badge>
               </motion.div>
 
@@ -322,7 +322,7 @@ export default function LandingPage() {
             <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-2">Infrastructure</p>
             <h2 className="text-2xl font-semibold text-foreground">Multi-Chain Roadmap</h2>
             <p className="text-sm text-muted-foreground mt-1.5 max-w-lg mx-auto">
-              Same EVM contract bytecode. Chain-agnostic architecture. Incremental L2 expansion without protocol rewrites.
+              The hackathon MVP runs exclusively on Avalanche Fuji. Multichain expansion is explicitly post-MVP.
             </p>
           </motion.div>
 
@@ -413,9 +413,9 @@ export default function LandingPage() {
             className="mt-8 max-w-2xl mx-auto grid sm:grid-cols-3 gap-4 text-center"
           >
             {[
-              { label: "EVM-compatible", desc: "Same bytecode on any L2" },
-              { label: "Chain-agnostic UX", desc: "Auto-detects wallet network" },
-              { label: "No CCIP yet", desc: "L2→L2 bridge on roadmap" },
+              { label: "Avalanche Fuji only", desc: "Single chain for the MVP" },
+              { label: "CCTP post-MVP", desc: "Circle bridge after hackathon" },
+              { label: "ZeroDev future", desc: "Chain abstraction, smart accounts" },
             ].map((item) => (
               <div key={item.label} className="px-4 py-3 rounded-lg border border-border/60 bg-background">
                 <p className="text-xs font-semibold text-foreground">{item.label}</p>
@@ -489,8 +489,8 @@ export default function LandingPage() {
           </div>
           <div className="flex items-center gap-4">
             <span className="flex items-center gap-1">
-              <span className="h-1.5 w-1.5 rounded-full bg-primary/60" />
-              Arbitrum Sepolia
+              <span className="h-1.5 w-1.5 rounded-full bg-accent/70" />
+              Avalanche Fuji
             </span>
             <span>{t("landing.footer.tagline")}</span>
           </div>
