@@ -20,10 +20,13 @@ contract CacaoFlowOpportunities is Ownable, ReentrancyGuard {
     // ─── Types ───────────────────────────────────────────────
 
     enum OpportunityStatus {
-        Published,   // accepting investments
-        Funded,      // target reached, waiting for harvest
-        Settled,     // repaid by originator, ready for claims
-        Cancelled    // funding failed or cancelled
+        Draft,       // created but not published yet
+        Open,        // accepting investments
+        Funded,      // target reached, waiting to activate
+        Active,      // tenor started, waiting for harvest
+        Repaid,      // originator repaid, investors can claim
+        Defaulted,   // originator failed to repay
+        Cancelled    // cancelled before funding
     }
 
     struct Opportunity {
@@ -112,8 +115,8 @@ contract CacaoFlowOpportunities is Ownable, ReentrancyGuard {
 
     // ─── Originator actions ──────────────────────────────────
 
-    /// @notice Publish a new investment opportunity (only originator or owner)
-    function publishOpportunity(
+    /// @notice Create a new investment opportunity in Draft status (only owner)
+    function createOpportunity(
         string calldata vpcId,
         string calldata opportunityId,
         uint256 targetRaise,
@@ -141,7 +144,7 @@ contract CacaoFlowOpportunities is Ownable, ReentrancyGuard {
             fundingDeadline: block.timestamp + (fundingDeadlineDays * 1 days),
             raisedAmount: 0,
             settleAmount: 0,
-            status: OpportunityStatus.Published
+            status: OpportunityStatus.Draft
         });
 
         emit OpportunityPublished(
@@ -158,10 +161,47 @@ contract CacaoFlowOpportunities is Ownable, ReentrancyGuard {
 
     // ─── Investor actions ────────────────────────────────────
 
-    /// @notice Invest USDC into a published opportunity
+    // ─── Admin actions ───────────────────────────────────
+
+    /// @notice Move opportunity from Draft to Open (only owner)
+    function publishOpportunity(uint256 id) external onlyOwner {
+        Opportunity storage opp = opportunities[id];
+        require(opp.status == OpportunityStatus.Draft, "not draft");
+        opp.status = OpportunityStatus.Open;
+    }
+
+    /// @notice Move opportunity from Funded to Active (only owner)
+    function activateOpportunity(uint256 id) external onlyOwner {
+        Opportunity storage opp = opportunities[id];
+        require(opp.status == OpportunityStatus.Funded, "not funded");
+        opp.status = OpportunityStatus.Active;
+    }
+
+    /// @notice Mark opportunity as Repaid after receiving settlement (only owner)
+    function markRepaid(uint256 id, uint256 settleAmount) external onlyOwner {
+        Opportunity storage opp = opportunities[id];
+        require(opp.status == OpportunityStatus.Active, "not active");
+        require(settleAmount > 0, "invalid settle amount");
+        
+        opp.settleAmount = settleAmount;
+        opp.status = OpportunityStatus.Repaid;
+        
+        emit OpportunitySettled(id, settleAmount);
+    }
+
+    /// @notice Mark opportunity as Defaulted (only owner)
+    function markDefaulted(uint256 id) external onlyOwner {
+        Opportunity storage opp = opportunities[id];
+        require(opp.status == OpportunityStatus.Active, "not active");
+        opp.status = OpportunityStatus.Defaulted;
+    }
+
+    // ─── Investor actions ────────────────────────────────
+
+    /// @notice Invest USDC into an open opportunity
     function invest(uint256 id, uint256 amount) external nonReentrant returns (uint256 positionId) {
         Opportunity storage opp = opportunities[id];
-        require(opp.status == OpportunityStatus.Published, "not open");
+        require(opp.status == OpportunityStatus.Open, "not open");
         require(block.timestamp <= opp.fundingDeadline, "deadline passed");
         require(amount >= opp.minTicket, "below min ticket");
         require(opp.raisedAmount + amount <= opp.targetRaise, "exceeds target");
@@ -189,39 +229,16 @@ contract CacaoFlowOpportunities is Ownable, ReentrancyGuard {
         }
     }
 
-    // ─── Settlement (originator repays) ──────────────────────
+    // ─── Claims ──────────────────────────────────────────────
 
-    /// @notice Originator calls this after harvest to repay principal + return.
-    ///         Must approve this contract to spend settleAmount before calling.
-    function settle(uint256 id) external nonReentrant {
-        Opportunity storage opp = opportunities[id];
-        require(msg.sender == opp.originator || msg.sender == owner(), "not originator");
-        require(
-            opp.status == OpportunityStatus.Funded ||
-            opp.status == OpportunityStatus.Published,
-            "cannot settle"
-        );
-
-        uint256 principal = opp.raisedAmount;
-        uint256 returnAmount = (principal * opp.expectedReturnBps) / BPS_DENOMINATOR;
-        uint256 total = principal + returnAmount;
-
-        usdc.safeTransferFrom(msg.sender, address(this), total);
-
-        opp.settleAmount = total;
-        opp.status = OpportunityStatus.Settled;
-
-        emit OpportunitySettled(id, total);
-    }
-
-    /// @notice Investor claims their principal + return after settlement
+    /// @notice Investor claims their principal + return after repayment
     function claimRepayment(uint256 positionId) external nonReentrant {
         Position storage pos = positions[positionId];
         require(pos.investor == msg.sender, "not your position");
         require(!pos.claimed, "already claimed");
 
         Opportunity storage opp = opportunities[pos.opportunityId];
-        require(opp.status == OpportunityStatus.Settled, "not settled");
+        require(opp.status == OpportunityStatus.Repaid, "not repaid");
 
         pos.claimed = true;
 
@@ -242,11 +259,14 @@ contract CacaoFlowOpportunities is Ownable, ReentrancyGuard {
 
     // ─── Cancellation & Refunds ──────────────────────────────
 
-    /// @notice Owner or originator can cancel a Published opportunity
-    function cancelOpportunity(uint256 id) external {
+    /// @notice Owner can cancel a Draft or Open opportunity
+    function cancelOpportunity(uint256 id) external onlyOwner {
         Opportunity storage opp = opportunities[id];
-        require(msg.sender == opp.originator || msg.sender == owner(), "not authorized");
-        require(opp.status == OpportunityStatus.Published, "cannot cancel");
+        require(
+            opp.status == OpportunityStatus.Draft ||
+            opp.status == OpportunityStatus.Open,
+            "cannot cancel"
+        );
 
         opp.status = OpportunityStatus.Cancelled;
         emit OpportunityCancelled(id);
@@ -261,7 +281,8 @@ contract CacaoFlowOpportunities is Ownable, ReentrancyGuard {
         Opportunity storage opp = opportunities[pos.opportunityId];
         require(
             opp.status == OpportunityStatus.Cancelled ||
-            (opp.status == OpportunityStatus.Published && block.timestamp > opp.fundingDeadline),
+            opp.status == OpportunityStatus.Defaulted ||
+            (opp.status == OpportunityStatus.Open && block.timestamp > opp.fundingDeadline),
             "not refundable"
         );
 
@@ -293,5 +314,10 @@ contract CacaoFlowOpportunities is Ownable, ReentrancyGuard {
 
     function setFeeRecipient(address _feeRecipient) external onlyOwner {
         feeRecipient = _feeRecipient;
+    }
+
+    /// @notice Emergency: owner can transfer USDC out (use with extreme caution)
+    function emergencyWithdraw(address token, uint256 amount) external onlyOwner {
+        IERC20(token).safeTransfer(owner(), amount);
     }
 }

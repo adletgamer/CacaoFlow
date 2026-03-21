@@ -69,3 +69,5 @@ export function fromUsdcUnits(amount: bigint): number {
 
 export const isContractsDeployed =
   CONTRACT_ADDRESSES.CacaoFlowOpportunities !== "0x0000000000000000000000000000000000000000";
+
+export * from "./opportunityStatus";

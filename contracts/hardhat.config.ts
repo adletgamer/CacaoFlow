@@ -13,6 +13,9 @@ const config: HardhatUserConfig = {
       optimizer: { enabled: true, runs: 200 },
     },
   },
+  paths: {
+    sources: "./src",
+  },
   networks: {
     fuji: {
       type: "http",
