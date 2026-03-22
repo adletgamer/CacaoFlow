@@ -115,8 +115,8 @@ function OpportunityCard({ opp, delay }: { opp: MockInvestmentOpportunity; delay
             </div>
             <Progress value={funded} className="h-1.5" />
             <div className="flex justify-between text-[10px] text-muted-foreground tabular-nums">
-              <span>${opp.raised_amount_usd.toLocaleString()} raised</span>
-              <span>${opp.target_raise_usd.toLocaleString()} {t("opportunities.card.targetRaise")}</span>
+              <span>${opp.raised_amount_usd.toLocaleString("en-US")} raised</span>
+              <span>${opp.target_raise_usd.toLocaleString("en-US")} {t("opportunities.card.targetRaise")}</span>
             </div>
           </div>
 
@@ -202,7 +202,7 @@ export default function OpportunitiesPage() {
       {/* Stats */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <StatCard icon={BarChart3} title={t("opportunities.stats.open")} value={openCount} subtitle={t("opportunities.stats.openSub")} delay={0} />
-        <StatCard icon={DollarSign} title={t("opportunities.stats.totalCapital")} value={`$${totalCapital.toLocaleString()}`} subtitle={t("opportunities.stats.totalCapitalSub")} delay={0.05} />
+        <StatCard icon={DollarSign} title={t("opportunities.stats.totalCapital")} value={`$${totalCapital.toLocaleString("en-US")}`} subtitle={t("opportunities.stats.totalCapitalSub")} delay={0.05} />
         <StatCard icon={Percent} title={t("opportunities.stats.avgReturn")} value={`${bpsToPercent(avgReturn)}%`} subtitle={t("opportunities.stats.avgReturnSub")} delay={0.1} />
       </div>
 

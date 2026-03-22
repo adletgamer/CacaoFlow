@@ -1,9 +1,17 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Inter, Playfair_Display } from "next/font/google";
 import "@/index.css";
 import { Providers } from "./providers";
 
-const inter = Inter({ subsets: ["latin"] });
+const fontSans = Inter({ 
+  subsets: ["latin"],
+  variable: "--font-sans",
+});
+
+const fontSerif = Playfair_Display({
+  subsets: ["latin"],
+  variable: "--font-serif",
+});
 
 export const metadata: Metadata = {
   title: "Cacao Flow — Pre-Harvest Agricultural Finance",
@@ -17,7 +25,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="es" suppressHydrationWarning>
-      <body className={inter.className} suppressHydrationWarning>
+      <body className={`${fontSans.variable} ${fontSerif.variable} font-sans`} suppressHydrationWarning>
         <Providers>
           {children}
         </Providers>

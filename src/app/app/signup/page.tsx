@@ -9,9 +9,10 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "sonner";
-import { Loader2, ArrowRight, ArrowLeft, Building2, User, CheckCircle2, XCircle } from "lucide-react";
+import { Loader2, ArrowRight, ArrowLeft, Building2, User, CheckCircle2, XCircle, Mail, Lock } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
+import { supabase } from "@/lib/supabase";
 
 const COUNTRIES = ["Perú", "Colombia", "Chile", "Brasil", "Ecuador", "Argentina"];
 
@@ -56,7 +57,7 @@ const LOCATION_DATA: Record<string, string[]> = {
   ]
 };
 
-type Step = "location_role" | "identity" | "confirmation";
+type Step = "location_role" | "identity" | "confirmation" | "account";
 
 export default function SignupPage() {
   const router = useRouter();
@@ -64,6 +65,8 @@ export default function SignupPage() {
   const [step, setStep] = useState<Step>("location_role");
   const [loading, setLoading] = useState(false);
   const [verificationStatus, setVerificationStatus] = useState<"idle" | "success" | "error">("idle");
+  const [verifiedName, setVerifiedName] = useState("");
+  const [apiData, setApiData] = useState<any>(null);
 
   // Form State
   const [country, setCountry] = useState("");
@@ -71,12 +74,14 @@ export default function SignupPage() {
   const [district, setDistrict] = useState("");
   const [typeGeneral, setTypeGeneral] = useState<"Persona" | "Empresa" | "">("");
 
-  const [name, setName] = useState("");
   const [docId, setDocId] = useState("");
-  const [titular, setTitular] = useState("");
   const [titularDoc, setTitularDoc] = useState("");
 
   const [selectedRole, setSelectedRole] = useState<"Agricultor" | "Inversionista" | "both" | "">("");
+  
+  // Credentials State
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   // Helpers
   const docTypeLabel = () => {
@@ -105,26 +110,40 @@ export default function SignupPage() {
   };
 
   const handleIdentityCheck = async () => {
-    if (!name || !docId) {
-      toast.error(`Ingrese su Nombre y su ${docTypeLabel()}.`);
+    if (!docId) {
+      toast.error(`Ingrese su ${docTypeLabel()}.`);
       return;
     }
-    if (typeGeneral === "Empresa" && (!titular || !titularDoc)) {
-      toast.error("Ingrese los datos del representante legal.");
+    if (typeGeneral === "Empresa" && !titularDoc) {
+      toast.error("Ingrese el documento del representante legal.");
       return;
     }
 
     setLoading(true);
-    // Simulate API call for identity verification
-    await new Promise((resolve) => setTimeout(resolve, 1500));
-    setLoading(false);
+    try {
+      const response = await fetch("/api/auth/verify-identity", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ country, typeGeneral, docId, titularDoc }),
+      });
+      const data = await response.json();
 
-    // Mock validation logic: if doc length > 4, success, else fail
-    if (docId.length >= 5) {
-      setVerificationStatus("success");
-      setStep("confirmation");
-    } else {
+      if (response.ok && data.success) {
+        setVerificationStatus("success");
+        setApiData(data.data);
+        if (data.data?.nombres) {
+          setVerifiedName(data.data.nombres);
+        } else if (data.data?.empresa?.razonSocial) {
+          setVerifiedName(data.data.empresa.razonSocial);
+        }
+      } else {
+        setVerificationStatus("error");
+      }
+    } catch (error) {
+      console.error("Fetch verification error:", error);
       setVerificationStatus("error");
+    } finally {
+      setLoading(false);
       setStep("confirmation");
     }
   };
@@ -134,13 +153,48 @@ export default function SignupPage() {
     router.push("/app");
   };
 
-  const handleFinish = () => {
+  const handleNextToAccount = () => {
     if (!selectedRole) {
-      toast.error("Seleccione un rol antes de finalizar.");
+      toast.error("Seleccione un rol antes de continuar.");
       return;
     }
-    toast.success("Usuario registrado exitosamente.");
-    router.push("/app");
+    setStep("account");
+  };
+
+  const handleFinish = async () => {
+    if (!email || password.length < 6) {
+      toast.error("Ingrese un correo válido y una contraseña de al menos 6 caracteres.");
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          data: {
+            display_name: verifiedName,
+            doc_identificacion: docId,
+            country,
+            region,
+            district,
+            type_general: typeGeneral,
+            titular_identificacion: titularDoc,
+            app_role: selectedRole
+          }
+        }
+      });
+
+      if (error) throw error;
+
+      toast.success("Usuario registrado exitosamente en Supabase.");
+      router.push("/app");
+    } catch (err: any) {
+      toast.error(err.message || "Error al registrar usuario.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -155,6 +209,8 @@ export default function SignupPage() {
           <BadgeStep currentStep={step} step="identity" label="Identidad" idx={2} />
           <span className="text-border mx-0.5">→</span>
           <BadgeStep currentStep={step} step="confirmation" label="Confirmación" idx={3} />
+          <span className="text-border mx-0.5">→</span>
+          <BadgeStep currentStep={step} step="account" label="Cuenta" idx={4} />
         </div>
 
         <AnimatePresence mode="wait">
@@ -234,25 +290,15 @@ export default function SignupPage() {
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="pt-4 space-y-4">
-                  <div className="grid sm:grid-cols-2 gap-4">
-                    <div className="space-y-1.5">
-                      <Label>{typeGeneral === "Empresa" ? "Razón Social" : "Nombre Completo"} *</Label>
-                      <Input value={name} onChange={(e) => setName(e.target.value)} placeholder={typeGeneral === "Empresa" ? "Nombre de la empresa" : "Su nombre"} />
-                    </div>
-                    <div className="space-y-1.5">
-                      <Label>{docTypeLabel()} *</Label>
-                      <Input value={docId} onChange={(e) => setDocId(e.target.value)} placeholder="Número de documento" />
-                    </div>
+                  <div className="space-y-1.5 w-full sm:max-w-sm">
+                    <Label>{docTypeLabel()} *</Label>
+                    <Input value={docId} onChange={(e) => setDocId(e.target.value)} placeholder="Número de documento" />
                   </div>
 
                   {typeGeneral === "Empresa" && (
                     <div className="grid sm:grid-cols-2 gap-4 pt-4 border-t border-border/50 mt-4">
-                      <div className="space-y-1.5">
-                        <Label>Nombre del Titular / Representante Legal *</Label>
-                        <Input value={titular} onChange={(e) => setTitular(e.target.value)} placeholder="Nombre del representante" />
-                      </div>
-                      <div className="space-y-1.5">
-                        <Label>Documento del Titular *</Label>
+                      <div className="space-y-1.5 w-full sm:max-w-sm">
+                        <Label>Documento del Representante Legal *</Label>
                         <Input value={titularDoc} onChange={(e) => setTitularDoc(e.target.value)} placeholder="Identificación del representante" />
                       </div>
                     </div>
@@ -300,10 +346,50 @@ export default function SignupPage() {
                   <div className="mx-auto bg-success/10 p-3 rounded-full mb-3 inline-block">
                     <CheckCircle2 className="h-8 w-8 text-success" />
                   </div>
-                  <CardTitle className="text-lg">¡Identidad Verificada!</CardTitle>
-                  <p className="text-sm text-muted-foreground">Su cuenta ha sido validada existosamente.</p>
+                  <CardTitle className="text-lg">¡Felicitaciones {verifiedName ? verifiedName.split(' ')[0] : typeGeneral}! </CardTitle>
+                  <p className="text-sm text-muted-foreground">Sus datos han sido validados correctamente.</p>
                 </CardHeader>
                 <CardContent className="pt-6 space-y-4">
+                  {apiData && (
+                    <div className="bg-secondary/40 border border-border/60 rounded-xl p-4 mb-6 text-sm space-y-3">
+                      {apiData.empresa ? (
+                        <>
+                          <h4 className="font-semibold text-foreground flex items-center gap-2">
+                            <Building2 className="h-4 w-4 text-primary" /> Datos de la Empresa
+                          </h4>
+                          <div className="grid gap-2 grid-cols-1 sm:grid-cols-2 text-muted-foreground mb-4">
+                            <div><strong className="text-foreground">RUC:</strong> {apiData.empresa.ruc}</div>
+                            <div><strong className="text-foreground">Razón Social:</strong> {apiData.empresa.razonSocial}</div>
+                            {apiData.empresa.estado && <div><strong className="text-foreground">Estado:</strong> {apiData.empresa.estado}</div>}
+                            {apiData.empresa.condicion && <div><strong className="text-foreground">Condición:</strong> {apiData.empresa.condicion}</div>}
+                          </div>
+                          <h4 className="font-semibold text-foreground flex items-center gap-2 border-t border-border/50 pt-3">
+                            <User className="h-4 w-4 text-primary" /> Representante Legal
+                          </h4>
+                          <div className="grid gap-2 grid-cols-1 sm:grid-cols-2 text-muted-foreground">
+                            <div><strong className="text-foreground">Documento:</strong> {apiData.titular.dni}</div>
+                            <div className="col-span-1 sm:col-span-2"><strong className="text-foreground">Nombres:</strong> {`${apiData.titular.nombres} ${apiData.titular.apellidoPaterno || ''} ${apiData.titular.apellidoMaterno || ''}`}</div>
+                          </div>
+                        </>
+                      ) : (
+                        <>
+                          <h4 className="font-semibold text-foreground flex items-center gap-2">
+                            <User className="h-4 w-4 text-primary" /> Datos Extraídos de Consulta Oficial
+                          </h4>
+                          <div className="grid gap-2 grid-cols-1 sm:grid-cols-2 text-muted-foreground">
+                            <div><strong className="text-foreground">Documento:</strong> {apiData.dni || docId}</div>
+                            <div>
+                              <strong className="text-foreground">Nombres:</strong>{" "}
+                              {apiData.nombres ? `${apiData.nombres} ${apiData.apellidoPaterno || ''} ${apiData.apellidoMaterno || ''}` : verifiedName}
+                            </div>
+                            {apiData.estado && <div><strong className="text-foreground">Estado:</strong> {apiData.estado}</div>}
+                            {apiData.condicion && <div><strong className="text-foreground">Condición:</strong> {apiData.condicion}</div>}
+                          </div>
+                        </>
+                      )}
+                    </div>
+                  )}
+
                   <div className="text-center space-y-1.5 mb-6">
                     <Label className="text-base">¿Con qué rol desea operar en Cacao Flow?</Label>
                     <p className="text-xs text-muted-foreground mt-1 max-w-sm mx-auto">
@@ -334,11 +420,63 @@ export default function SignupPage() {
                   </div>
                 </CardContent>
                 <CardFooter className="justify-between border-t border-border/50 pt-4">
-                  <Button variant="ghost" onClick={() => { toast.success("Registro completado. Podrá elegir su rol más tarde."); router.push("/app"); }}>
+                  <Button variant="ghost" onClick={() => setStep("account")}>
                     Omitir por ahora
                   </Button>
-                  <Button variant="accent" onClick={handleFinish}>
-                    <CheckCircle2 className="h-4 w-4 mr-2" /> Finalizar Registro
+                  <Button variant="accent" onClick={handleNextToAccount}>
+                    Continuar a Cuenta <ArrowRight className="h-4 w-4 ml-2" />
+                  </Button>
+                </CardFooter>
+              </Card>
+            )}
+
+            {/* Step 4: Account Creation */}
+            {step === "account" && (
+              <Card>
+                <CardHeader className="border-b border-border/50 pb-4">
+                  <CardTitle className="text-base flex items-center gap-2">
+                    <Mail className="h-4 w-4 text-primary" />
+                    Cree sus Credenciales
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="pt-4 space-y-4">
+                  <div className="space-y-1.5 align-middle w-full sm:max-w-sm">
+                    <Label>Correo Electrónico *</Label>
+                    <div className="relative">
+                      <Mail className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
+                      <Input 
+                        value={email} 
+                        onChange={(e) => setEmail(e.target.value)} 
+                        type="email" 
+                        placeholder="tu@correo.com" 
+                        className="pl-9"
+                      />
+                    </div>
+                  </div>
+                  <div className="space-y-1.5 w-full sm:max-w-sm">
+                    <Label>Contraseña *</Label>
+                    <div className="relative">
+                      <Lock className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
+                      <Input 
+                        value={password} 
+                        onChange={(e) => setPassword(e.target.value)} 
+                        type="password" 
+                        placeholder="Mínimo 6 caracteres" 
+                        className="pl-9"
+                      />
+                    </div>
+                  </div>
+                </CardContent>
+                <CardFooter className="justify-between border-t border-border/50 pt-4">
+                  <Button variant="ghost" onClick={() => setStep("confirmation")} disabled={loading}>
+                    <ArrowLeft className="h-4 w-4 mr-1" /> Volver
+                  </Button>
+                  <Button variant="accent" onClick={handleFinish} disabled={loading}>
+                    {loading ? (
+                      <><Loader2 className="h-4 w-4 mr-2 animate-spin" /> Registrando...</>
+                    ) : (
+                      <><CheckCircle2 className="h-4 w-4 mr-2" /> Finalizar Registro</>
+                    )}
                   </Button>
                 </CardFooter>
               </Card>
@@ -355,7 +493,8 @@ function BadgeStep({ currentStep, step, label, idx }: { currentStep: string, ste
   const isActive = currentStep === step;
   const isPassed = 
     (currentStep === "identity" && idx < 2) || 
-    (currentStep === "confirmation" && idx < 3);
+    (currentStep === "confirmation" && idx < 3) ||
+    (currentStep === "account" && idx < 4);
 
   return (
     <div className={cn(

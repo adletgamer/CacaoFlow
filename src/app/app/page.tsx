@@ -11,6 +11,8 @@ import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import type { PlotStatus } from "@/lib/types";
 import { useT } from "@/hooks/useT";
+import { useState, useEffect } from "react";
+import { supabase } from "@/lib/supabase";
 
 const STATUS_VARIANT: Record<PlotStatus, "default" | "success" | "warning" | "accent" | "destructive" | "outline"> = {
   draft: "outline",
@@ -27,6 +29,16 @@ export default function OverviewPage() {
   const { plots, documents, originators } = useAppStore();
   const { t } = useT();
 
+  const [session, setSession] = useState<any>(null);
+  const [userRole, setUserRole] = useState<string>("");
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+      setUserRole(session?.user?.user_metadata?.app_role || "");
+    });
+  }, []);
+
   const totalYield = plots.reduce((sum, p) => sum + p.expected_yield_tons, 0);
   const totalArea = plots.reduce((sum, p) => sum + p.area_hectares, 0);
   const readyCount = plots.filter((p) => p.status === "ready_for_scoring").length;
@@ -40,21 +52,35 @@ export default function OverviewPage() {
     return documents.filter((d) => d.plot_id === plotId).length;
   }
 
-  const quickActions = [
-    { to: "/app/register", label: t("overview.actions.register.label"), desc: t("overview.actions.register.desc"), icon: Plus },
-    { to: "/app/lots", label: t("overview.actions.lots.label"), desc: t("overview.actions.lots.desc"), icon: Leaf },
+  // Base actions
+  let quickActions = [
     { to: "/app/financing", label: t("overview.actions.financing.label"), desc: t("overview.actions.financing.desc"), icon: DollarSign },
   ];
 
+  if (userRole === "Agricultor" || userRole === "both" || !session) {
+    quickActions = [
+      { to: "/app/register", label: t("overview.actions.register.label"), desc: t("overview.actions.register.desc"), icon: Plus },
+      { to: "/app/lots", label: t("overview.actions.lots.label"), desc: t("overview.actions.lots.desc"), icon: Leaf },
+      ...quickActions
+    ];
+  } else if (userRole === "Inversionista") {
+    quickActions = [
+      { to: "/app/opportunities", label: "Explorar Oportunidades", desc: "Vea lotes pre-aprobados para tokenizar", icon: Leaf },
+      ...quickActions
+    ];
+  }
+
   return (
     <>
-      <PageHeader title={t("overview.title")} description={t("overview.description")}>
-        <Button variant="accent" size="sm" asChild>
-          <Link href="/app/register">
-            <Plus className="h-4 w-4 mr-1" />
-            {t("common.registerPlot")}
-          </Link>
-        </Button>
+      <PageHeader title={session ? `Bienvenido ${session.user.user_metadata?.display_name || ''}` : t("overview.title")} description={t("overview.description")}>
+        {(userRole === "Agricultor" || userRole === "both" || !session) && (
+          <Button variant="accent" size="sm" asChild>
+            <Link href="/app/register">
+              <Plus className="h-4 w-4 mr-1" />
+              {t("common.registerPlot")}
+            </Link>
+          </Button>
+        )}
       </PageHeader>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -106,12 +132,14 @@ export default function OverviewPage() {
             <div className="py-12 text-center">
               <Leaf className="h-8 w-8 text-muted-foreground/40 mx-auto mb-3" />
               <p className="text-sm text-muted-foreground">{t("overview.recentPlots.empty")}</p>
-              <Button variant="outline" size="sm" className="mt-3" asChild>
-                <Link href="/app/register">
-                  <Plus className="h-3.5 w-3.5 mr-1" />
-                  {t("overview.recentPlots.registerFirst")}
-                </Link>
-              </Button>
+              {(userRole === "Agricultor" || userRole === "both") && (
+                <Button variant="outline" size="sm" className="mt-3" asChild>
+                  <Link href="/app/register">
+                    <Plus className="h-3.5 w-3.5 mr-1" />
+                    {t("overview.recentPlots.registerFirst")}
+                  </Link>
+                </Button>
+              )}
             </div>
           ) : (
             <div className="overflow-x-auto">

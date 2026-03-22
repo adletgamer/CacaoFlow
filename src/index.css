@@ -6,20 +6,21 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 240 10% 3.9%;
+    /* Tend Design System */
+    --background: 50 27% 96%; /* #F9F8F3 - Crema Suave */
+    --foreground: 240 10% 10%; /* #1A1A1A */
 
-    --card: 0 0% 100%;
-    --card-foreground: 240 10% 3.9%;
+    --card: 0 0% 100%; /* #FFFFFF */
+    --card-foreground: 240 10% 10%;
 
     --popover: 0 0% 100%;
     --popover-foreground: 240 10% 3.9%;
 
-    --primary: 142 76% 14%;
+    --primary: 161 100% 14%; /* #004731 - Verde Bosque */
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 240 4.8% 95.9%;
-    --secondary-foreground: 240 5.9% 10%;
+    --secondary: 135 23% 93%; /* #E8F0EA - Verde Menta Pálido */
+    --secondary-foreground: 161 100% 14%; /* El texto secundario hace contraste con el primario */
 
     --muted: 240 4.8% 95.9%;
     --muted-foreground: 240 3.8% 46.1%;
@@ -37,9 +38,9 @@
 
     --border: 240 5.9% 90%;
     --input: 240 4.8% 95.9%;
-    --ring: 142 76% 14%;
+    --ring: 161 100% 14%;
 
-    --radius: 0.5rem;
+    --radius: 1rem; /* B2B moderno recomienda border-radius generosos (12px u 16px) */
 
     --sidebar-background: 0 0% 98%;
     --sidebar-foreground: 240 5.3% 26.1%;
@@ -61,7 +62,7 @@
     --card-foreground: 0 0% 98%;
     --popover: 240 10% 3.9%;
     --popover-foreground: 0 0% 98%;
-    --primary: 142 76% 36%;
+    --primary: 161 100% 25%; /* Ajuste mínimo para Dark Mode si existiera */
     --primary-foreground: 0 0% 100%;
     --secondary: 240 3.7% 15.9%;
     --secondary-foreground: 0 0% 98%;
@@ -73,7 +74,7 @@
     --destructive-foreground: 0 0% 98%;
     --border: 240 3.7% 15.9%;
     --input: 240 3.7% 15.9%;
-    --ring: 142 76% 36%;
+    --ring: 161 100% 25%;
   }
 }
 
