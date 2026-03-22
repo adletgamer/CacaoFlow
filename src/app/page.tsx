@@ -103,7 +103,7 @@ export default function LandingPage() {
       <header className="sticky top-0 z-50 border-b border-border bg-background/95 backdrop-blur">
         <div className="container flex h-14 items-center justify-between">
           <Link href="/" className="flex items-center">
-            <Image src="/logo.png" alt="Cacao Flow" width={110} height={44} className="h-10 w-auto object-contain" style={{ width: "auto" }} priority />
+            <Image src="/logo.png" alt="Cacao Flow" width={100} height={40} className="object-contain" priority />
           </Link>
           <div className="flex items-center gap-3">
             <Button variant="ghost" size="sm" className="text-muted-foreground" asChild>
@@ -515,7 +515,7 @@ export default function LandingPage() {
       <footer className="border-t border-border py-5">
         <div className="container flex items-center justify-between text-xs text-muted-foreground flex-wrap gap-3">
           <div className="flex items-center gap-2">
-            <Image src="/logo.png" alt="Cacao Flow" width={64} height={26} className="h-6 w-auto object-contain opacity-60" style={{ width: "auto" }} />
+            <Image src="/logo.png" alt="Cacao Flow" width={60} height={24} className="object-contain opacity-60" />
             <span>{t("landing.footer.brand")}</span>
           </div>
           <div className="flex items-center gap-4">

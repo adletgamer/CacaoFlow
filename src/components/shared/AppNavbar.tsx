@@ -36,7 +36,7 @@ export function AppNavbar() {
     <header className="sticky top-0 z-50 border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-14 items-center justify-between">
         <Link href="/" className="flex items-center">
-          <Image src="/logo.png" alt="Cacao Flow" width={110} height={44} className="h-11 w-auto object-contain" style={{ width: "auto" }} priority />
+          <Image src="/logo.png" alt="Cacao Flow" width={110} height={44} className="object-contain" priority />
         </Link>
 
         {/* Desktop nav */}
