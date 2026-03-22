@@ -1,0 +1,11 @@
+node_modules
+.next
+dist
+dist-ssr
+.git
+.vercel
+.netlify
+contracts/node_modules
+contracts/cache
+contracts/artifacts
+*.log
