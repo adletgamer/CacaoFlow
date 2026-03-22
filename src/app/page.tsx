@@ -101,9 +101,9 @@ export default function LandingPage() {
 
       {/* ── Navbar ───────────────────────────────────────────── */}
       <header className="sticky top-0 z-50 border-b border-border bg-background/95 backdrop-blur">
-        <div className="container flex h-14 items-center justify-between">
-          <Link href="/" className="flex items-center">
-            <Image src="/logo.png" alt="Cacao Flow" width={100} height={40} className="object-contain" priority />
+        <div className="container flex h-[66px] items-center justify-between">
+          <Link href="/" className="relative flex items-center h-[50px] w-[140px] shrink-0">
+            <Image src="/logo.png" alt="Cacao Flow" fill className="object-contain object-left" priority />
           </Link>
           <div className="flex items-center gap-3">
             <Button variant="ghost" size="sm" className="text-muted-foreground" asChild>
@@ -515,7 +515,9 @@ export default function LandingPage() {
       <footer className="border-t border-border py-5">
         <div className="container flex items-center justify-between text-xs text-muted-foreground flex-wrap gap-3">
           <div className="flex items-center gap-2">
-            <Image src="/logo.png" alt="Cacao Flow" width={60} height={24} className="object-contain opacity-60" />
+            <div className="relative h-8 w-24 shrink-0">
+              <Image src="/logo.png" alt="Cacao Flow" fill className="object-contain object-left opacity-60" />
+            </div>
             <span>{t("landing.footer.brand")}</span>
           </div>
           <div className="flex items-center gap-4">
