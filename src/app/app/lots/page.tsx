@@ -209,12 +209,12 @@ export default function MyLotsPage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4 }}
         >
-          <Card className="mt-2">
+          <Card className="mt-2 rounded-2xl border-border/40">
             <CardContent className="py-16 text-center">
-              <div className="mx-auto h-16 w-16 rounded-full bg-primary/10 flex items-center justify-center mb-4">
+              <div className="mx-auto h-16 w-16 rounded-2xl bg-primary/10 flex items-center justify-center mb-4">
                 <Leaf className="h-8 w-8 text-primary" />
               </div>
-              <h3 className="text-lg font-semibold mb-1">{t("lots.empty.title")}</h3>
+              <h3 className="text-lg font-semibold mb-1 font-serif">{t("lots.empty.title")}</h3>
               <p className="text-sm text-muted-foreground mb-6 max-w-md mx-auto">
                 {t("lots.empty.body")}
               </p>
@@ -243,7 +243,7 @@ export default function MyLotsPage() {
         <>
           {/* Desktop table */}
           <div className="hidden lg:block">
-            <Card>
+            <Card className="rounded-2xl border-border/40 shadow-card">
               <div className="overflow-x-auto">
                 <table className="w-full text-sm">
                   <thead>
@@ -336,7 +336,7 @@ export default function MyLotsPage() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: i * 0.04, duration: 0.3 }}
                 >
-                  <Card className="hover:shadow-elevated transition-shadow">
+                  <Card className="hover:shadow-elevated transition-shadow rounded-2xl border-border/40">
                     <CardContent className="p-4 space-y-3">
                       {/* Row 1: name + status */}
                       <div className="flex items-start justify-between gap-2">

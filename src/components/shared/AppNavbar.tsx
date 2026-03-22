@@ -53,7 +53,7 @@ export function AppNavbar() {
   }
 
   return (
-    <header className="sticky top-0 z-50 border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <header className="sticky top-0 z-50 border-b border-border/40 bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/80">
       <div className="container flex h-[66px] items-center justify-between">
         <Link href="/" className="relative flex items-center h-[50px] w-[140px] shrink-0">
           <Image src="/logo.png" alt="Cacao Flow" fill className="object-contain object-left" priority />

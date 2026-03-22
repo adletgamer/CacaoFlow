@@ -99,9 +99,9 @@ export default function OverviewPage() {
       >
         {quickActions.map((action) => (
           <Link key={action.to} href={action.to}>
-            <Card className="hover:shadow-elevated transition-all cursor-pointer group h-full">
-              <CardContent className="p-5 flex items-start gap-3">
-                <div className="h-10 w-10 rounded-md bg-primary/10 flex items-center justify-center shrink-0 group-hover:bg-primary/20 transition-colors">
+            <Card className="hover:shadow-elevated transition-all cursor-pointer group h-full rounded-2xl border-border/40">
+              <CardContent className="p-6 flex items-start gap-4">
+                <div className="h-11 w-11 rounded-xl bg-primary/10 flex items-center justify-center shrink-0 group-hover:bg-primary/20 transition-colors">
                   <action.icon className="h-5 w-5 text-primary" />
                 </div>
                 <div className="flex-1 min-w-0">
@@ -116,10 +116,10 @@ export default function OverviewPage() {
       </motion.div>
 
       {/* Recent plots */}
-      <Card>
-        <CardHeader className="border-b border-border/50 pb-4">
+      <Card className="rounded-2xl border-border/40 shadow-card">
+        <CardHeader className="border-b border-border/40 pb-4 p-6">
           <div className="flex items-center justify-between">
-            <CardTitle className="text-base">{t("overview.recentPlots.title")}</CardTitle>
+            <CardTitle className="text-base font-serif">{t("overview.recentPlots.title")}</CardTitle>
             <Button variant="ghost" size="sm" className="text-xs" asChild>
               <Link href="/app/lots">
                 {t("overview.recentPlots.viewAll")}

@@ -304,7 +304,7 @@ export default function RegisterPlotPage() {
           {section === "originator" && (
             <Card>
               <CardHeader className="border-b border-border/50 pb-4">
-                <CardTitle className="text-base flex items-center gap-2">
+                <CardTitle className="text-base font-serif flex items-center gap-2">
                   <Building2 className="h-4 w-4 text-primary" />
                   {t("register.originator.title")}
                 </CardTitle>
@@ -426,7 +426,7 @@ export default function RegisterPlotPage() {
           {section === "plot" && (
             <Card>
               <CardHeader className="border-b border-border/50 pb-4">
-                <CardTitle className="text-base flex items-center gap-2">
+                <CardTitle className="text-base font-serif flex items-center gap-2">
                   <MapPin className="h-4 w-4 text-primary" />
                   {t("register.plot.title")}
                 </CardTitle>
@@ -541,7 +541,7 @@ export default function RegisterPlotPage() {
           {section === "production" && (
             <Card>
               <CardHeader className="border-b border-border/50 pb-4">
-                <CardTitle className="text-base flex items-center gap-2">
+                <CardTitle className="text-base font-serif flex items-center gap-2">
                   <Sprout className="h-4 w-4 text-primary" />
                   {t("register.production.title")}
                 </CardTitle>
@@ -580,7 +580,7 @@ export default function RegisterPlotPage() {
           {section === "evidence" && (
             <Card>
               <CardHeader className="border-b border-border/50 pb-4">
-                <CardTitle className="text-base flex items-center gap-2">
+                <CardTitle className="text-base font-serif flex items-center gap-2">
                   <Upload className="h-4 w-4 text-primary" />
                   {t("register.evidence.title")}
                 </CardTitle>
@@ -653,7 +653,7 @@ export default function RegisterPlotPage() {
             <div className="space-y-4">
               <Card>
                 <CardHeader className="border-b border-border/50 pb-4">
-                  <CardTitle className="text-base flex items-center gap-2">
+                  <CardTitle className="text-base font-serif flex items-center gap-2">
                     <ClipboardList className="h-4 w-4 text-primary" />
                     {t("register.review.title")}
                   </CardTitle>

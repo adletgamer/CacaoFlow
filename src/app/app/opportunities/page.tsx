@@ -55,15 +55,15 @@ function OpportunityCard({ opp, delay }: { opp: MockInvestmentOpportunity; delay
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.35, delay, ease: [0.25, 0.1, 0.25, 1] }}
     >
-      <Card className="hover:shadow-elevated transition-all group h-full flex flex-col">
+      <Card className="hover:shadow-elevated transition-all group h-full flex flex-col rounded-2xl border-border/40">
         {/* Header stripe */}
-        <div className={`h-1 rounded-t-lg ${isOpen ? "bg-primary" : "bg-muted-foreground/30"}`} />
+        <div className={`h-1.5 rounded-t-2xl ${isOpen ? "bg-primary" : "bg-muted-foreground/30"}`} />
 
         <CardContent className="p-5 flex flex-col gap-4 flex-1">
           {/* Top row */}
           <div className="flex items-start justify-between gap-2">
             <div className="min-w-0 flex-1">
-              <p className="font-semibold text-sm leading-tight truncate">{opp.lot_name}</p>
+              <p className="font-semibold text-sm leading-tight truncate font-serif">{opp.lot_name}</p>
               <div className="flex items-center gap-1.5 mt-1 text-xs text-muted-foreground">
                 <Sprout className="h-3 w-3 shrink-0" />
                 <span>{opp.crop_type}</span>

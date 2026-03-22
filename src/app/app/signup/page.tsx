@@ -226,7 +226,7 @@ export default function SignupPage() {
             {step === "location_role" && (
               <Card>
                 <CardHeader className="border-b border-border/50 pb-4">
-                  <CardTitle className="text-base flex items-center gap-2">
+                  <CardTitle className="text-base font-serif flex items-center gap-2">
                     <Building2 className="h-4 w-4 text-primary" />
                     País y Rol
                   </CardTitle>
@@ -284,7 +284,7 @@ export default function SignupPage() {
             {step === "identity" && (
               <Card>
                 <CardHeader className="border-b border-border/50 pb-4">
-                  <CardTitle className="text-base flex items-center gap-2">
+                  <CardTitle className="text-base font-serif flex items-center gap-2">
                     <User className="h-4 w-4 text-primary" />
                     Datos de Identidad
                   </CardTitle>
@@ -321,12 +321,12 @@ export default function SignupPage() {
 
             {/* Step 3: Confirmation */}
             {step === "confirmation" && verificationStatus === "error" && (
-              <Card className="border-destructive/30 bg-destructive/5">
+              <Card className="border-destructive/30 bg-destructive/5 rounded-2xl">
                 <CardHeader className="border-none pb-0">
-                  <div className="mx-auto bg-destructive/10 p-3 rounded-full mb-3">
+                  <div className="mx-auto bg-destructive/10 p-4 rounded-2xl mb-3">
                     <XCircle className="h-8 w-8 text-destructive" />
                   </div>
-                  <CardTitle className="text-center text-lg text-foreground">No se pudo verificar su identidad</CardTitle>
+                  <CardTitle className="text-center text-lg text-foreground font-serif">No se pudo verificar su identidad</CardTitle>
                 </CardHeader>
                 <CardContent className="text-center pt-2 pb-6">
                   <p className="text-sm text-muted-foreground mt-2">
@@ -346,7 +346,7 @@ export default function SignupPage() {
                   <div className="mx-auto bg-success/10 p-3 rounded-full mb-3 inline-block">
                     <CheckCircle2 className="h-8 w-8 text-success" />
                   </div>
-                  <CardTitle className="text-lg">¡Felicitaciones {verifiedName ? verifiedName.split(' ')[0] : typeGeneral}! </CardTitle>
+                  <CardTitle className="text-lg font-serif">¡Felicitaciones {verifiedName ? verifiedName.split(' ')[0] : typeGeneral}! </CardTitle>
                   <p className="text-sm text-muted-foreground">Sus datos han sido validados correctamente.</p>
                 </CardHeader>
                 <CardContent className="pt-6 space-y-4">
@@ -434,7 +434,7 @@ export default function SignupPage() {
             {step === "account" && (
               <Card>
                 <CardHeader className="border-b border-border/50 pb-4">
-                  <CardTitle className="text-base flex items-center gap-2">
+                  <CardTitle className="text-base font-serif flex items-center gap-2">
                     <Mail className="h-4 w-4 text-primary" />
                     Cree sus Credenciales
                   </CardTitle>

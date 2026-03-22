@@ -36,9 +36,9 @@ export default function OutcomeSimulationPage() {
       >
         {/* Scenario */}
         <Card>
-          <CardHeader className="border-b border-border/50 pb-4">
+          <CardHeader className="border-b border-border/40 pb-4">
             <div className="flex items-center justify-between">
-              <CardTitle className="text-base">{t("simulation.scenario.title")}</CardTitle>
+              <CardTitle className="text-base font-serif">{t("simulation.scenario.title")}</CardTitle>
               <Badge variant="success">{t("simulation.scenario.badge")}</Badge>
             </div>
           </CardHeader>
@@ -67,8 +67,8 @@ export default function OutcomeSimulationPage() {
 
         {/* Distribution */}
         <Card>
-          <CardHeader className="border-b border-border/50 pb-4">
-            <CardTitle className="text-base">{t("simulation.distribution.title")}</CardTitle>
+          <CardHeader className="border-b border-border/40 pb-4">
+            <CardTitle className="text-base font-serif">{t("simulation.distribution.title")}</CardTitle>
           </CardHeader>
           <CardContent className="pt-5">
             <div className="grid sm:grid-cols-2 gap-4">

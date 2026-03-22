@@ -30,18 +30,18 @@ export default function GlobalStatsPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.1, duration: 0.4 }}
             >
-              <Card className="border-border/50 bg-card hover:bg-secondary/20 transition-colors shadow-sm">
+              <Card className="border-border/40 bg-white hover:shadow-elevated transition-all rounded-2xl">
                 <CardHeader className="flex flex-row items-center justify-between pb-2">
-                  <CardTitle className="text-sm font-medium text-muted-foreground">
+                  <CardTitle className="text-xs font-medium text-muted-foreground uppercase tracking-wider font-sans">
                     {stat.title}
                   </CardTitle>
-                  <div className="p-2 bg-primary/10 rounded-md">
-                    <stat.icon className="h-4 w-4 text-primary" />
+                  <div className="p-2.5 bg-primary/10 rounded-xl">
+                    <stat.icon className="h-5 w-5 text-primary" />
                   </div>
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold">{stat.value}</div>
-                  <p className="text-xs text-status-success font-medium flex items-center mt-1">
+                  <div className="text-2xl font-bold font-serif">{stat.value}</div>
+                  <p className="text-xs text-emerald-600 font-medium flex items-center mt-1.5">
                     <ArrowUpRight className="h-3 w-3 mr-0.5" />
                     {stat.change} vs último mes
                   </p>
@@ -59,14 +59,14 @@ export default function GlobalStatsPage() {
             transition={{ delay: 0.4 }}
             className="lg:col-span-2"
           >
-            <Card className="h-full border-border/50">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
+            <Card className="h-full border-border/40 rounded-2xl">
+              <CardHeader className="p-6">
+                <CardTitle className="flex items-center gap-2 font-serif text-lg">
                   <BarChart className="h-5 w-5 text-primary" />
                   Volumen de Inversión (Últimos 6 meses)
                 </CardTitle>
               </CardHeader>
-              <CardContent className="flex items-center justify-center h-[300px] border-t border-border/30 bg-secondary/5 rounded-b-xl">
+              <CardContent className="flex items-center justify-center h-[300px] border-t border-border/30 bg-secondary/20 rounded-b-2xl">
                 {/* Aqui se integraría Recharts o Chart.js. Mockup visual simple para la demo: */}
                 <div className="flex items-end justify-between w-full h-48 px-4 gap-2 opacity-80">
                   {[40, 55, 45, 70, 65, 90].map((h, i) => (
@@ -90,9 +90,9 @@ export default function GlobalStatsPage() {
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.5 }}
           >
-            <Card className="h-full border-border/50">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
+            <Card className="h-full border-border/40 rounded-2xl">
+              <CardHeader className="p-6">
+                <CardTitle className="flex items-center gap-2 font-serif text-lg">
                   <Globe className="h-5 w-5 text-accent" />
                   Distribución Geográfica
                 </CardTitle>

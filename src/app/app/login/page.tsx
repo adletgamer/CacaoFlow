@@ -49,14 +49,14 @@ export default function LoginPage() {
     <>
       <PageHeader title="Iniciar Sesión" description="Accede a Cacao Flow para gestionar tus activos o inversiones." />
       
-      <div className="max-w-md mx-auto mt-8">
+      <div className="max-w-md mx-auto mt-10">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3 }}>
-          <Card className="border-border/60 shadow-lg">
-            <CardHeader className="text-center pb-6">
-              <div className="mx-auto bg-primary/10 p-3 rounded-full mb-4 inline-flex items-center justify-center">
+          <Card className="border-border/40 shadow-card rounded-2xl">
+            <CardHeader className="text-center pb-6 pt-8">
+              <div className="mx-auto bg-primary/10 p-4 rounded-2xl mb-4 inline-flex items-center justify-center">
                 <LogIn className="h-6 w-6 text-primary" />
               </div>
-              <CardTitle className="text-xl">Bienvenido de vuelta</CardTitle>
+              <CardTitle className="text-xl font-serif">Bienvenido de vuelta</CardTitle>
             </CardHeader>
             <form onSubmit={handleLogin}>
               <CardContent className="space-y-4">
@@ -87,8 +87,8 @@ export default function LoginPage() {
                   </div>
                 </div>
               </CardContent>
-              <CardFooter className="flex flex-col gap-4 border-t border-border/50 pt-6">
-                <Button type="submit" variant="accent" className="w-full" disabled={loading}>
+              <CardFooter className="flex flex-col gap-4 border-t border-border/40 pt-6 pb-8">
+                <Button type="submit" variant="accent" className="w-full h-11 rounded-xl text-base font-semibold" disabled={loading}>
                   {loading ? (
                     <><Loader2 className="h-4 w-4 mr-2 animate-spin" /> Autenticando...</>
                   ) : (

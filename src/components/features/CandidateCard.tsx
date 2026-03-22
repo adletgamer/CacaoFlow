@@ -35,11 +35,11 @@ export function CandidateCard({ candidate, delay = 0 }: CandidateCardProps) {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, delay, ease: [0.25, 0.1, 0.25, 1] }}
     >
-      <Card className="hover:shadow-elevated transition-shadow">
-        <CardHeader className="pb-3 border-b border-border/50">
+      <Card className="hover:shadow-elevated transition-shadow rounded-2xl border-border/40">
+        <CardHeader className="pb-3 border-b border-border/40 p-6">
           <div className="flex items-start justify-between">
             <div>
-              <CardTitle className="text-base">{candidate.lotId}</CardTitle>
+              <CardTitle className="text-base font-serif">{candidate.lotId}</CardTitle>
               <p className="text-sm text-muted-foreground mt-0.5">{candidate.producerName}</p>
             </div>
             <ScoreBadge score={candidate.score} size="sm" />

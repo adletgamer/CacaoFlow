@@ -46,13 +46,16 @@ function Section({ title, icon: Icon, children, delay = 0 }: {
   return (
     <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.35, delay }}>
-      <Card>
-        <CardHeader className="pb-3 border-b border-border/50">
-          <CardTitle className="text-sm flex items-center gap-2">
-            <Icon className="h-4 w-4 text-primary" />{title}
+      <Card className="rounded-2xl border-border/40 shadow-card">
+        <CardHeader className="pb-3 border-b border-border/40">
+          <CardTitle className="text-sm font-serif flex items-center gap-2">
+            <div className="h-7 w-7 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
+              <Icon className="h-3.5 w-3.5 text-primary" />
+            </div>
+            {title}
           </CardTitle>
         </CardHeader>
-        <CardContent className="pt-4">{children}</CardContent>
+        <CardContent className="pt-5">{children}</CardContent>
       </Card>
     </motion.div>
   );
@@ -118,9 +121,9 @@ function InvestPanel({ opp }: { opp: MockInvestmentOpportunity }) {
   };
 
   return (
-    <Card className="border-primary/30">
-      <CardHeader className="pb-3 border-b border-border/50 bg-primary/5 rounded-t-lg">
-        <CardTitle className="text-sm flex items-center gap-2">
+    <Card className="border-primary/30 rounded-2xl shadow-card">
+      <CardHeader className="pb-3 border-b border-border/40 bg-primary/5 rounded-t-2xl">
+        <CardTitle className="text-sm font-serif flex items-center gap-2">
           <DollarSign className="h-4 w-4 text-primary" />
           {t("opportunityDetail.sections.invest")}
         </CardTitle>

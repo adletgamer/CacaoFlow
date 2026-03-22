@@ -19,12 +19,12 @@ export function StatCard({ title, value, subtitle, icon: Icon, trend, delay = 0 
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, delay, ease: [0.25, 0.1, 0.25, 1] }}
     >
-      <Card className="hover:shadow-elevated transition-shadow">
-        <CardContent className="p-5">
+      <Card className="hover:shadow-elevated transition-shadow rounded-2xl border-border/40">
+        <CardContent className="p-6">
           <div className="flex items-start justify-between">
-            <div className="space-y-1">
-              <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">{title}</p>
-              <p className="text-2xl font-semibold tabular-nums text-foreground">{value}</p>
+            <div className="space-y-1.5">
+              <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider font-sans">{title}</p>
+              <p className="text-2xl font-bold tabular-nums text-foreground font-serif">{value}</p>
               {subtitle && <p className="text-xs text-muted-foreground">{subtitle}</p>}
               {trend && (
                 <p className={cn("text-xs font-medium", trend.positive ? "text-success" : "text-destructive")}>
@@ -32,8 +32,8 @@ export function StatCard({ title, value, subtitle, icon: Icon, trend, delay = 0 
                 </p>
               )}
             </div>
-            <div className="rounded-md bg-primary/10 p-2">
-              <Icon className="h-4 w-4 text-primary" />
+            <div className="rounded-xl bg-primary/10 p-2.5">
+              <Icon className="h-5 w-5 text-primary" />
             </div>
           </div>
         </CardContent>
